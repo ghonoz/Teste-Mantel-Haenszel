@@ -22,28 +22,21 @@ maentel_haeszer_test <- function(x, correct = FALSE) {
   
   odds_ratio_estimator <- soma1/soma2 # OK 
   
-  
-  
-  
-  
-  
   f_statistic <- function(x)
   {
     (x[1,1]*x[2,2])*((x[1,1]+x[2,2])/(x[1,1]+x[2,1]+x[1,2]+x[2,2])^2)
   }
   
- 
-  
-  soma_f <- Reduce('+', lapply(lista, f_statistic)) # Certo
+  soma_f <- Reduce('+', lapply(lista, f_statistic)) # Certo#
   
   # R = (ai*di)/ni
   
   r_statistic_squared <- function(x) {
-    ((x[1, 1]*x[2, 2])/sum(x))^2
+    ((x[1, 1]*x[2, 2])/(x[1,1]+x[2,2]+x[2,1]+x[1,2]))^2
   }
   
   r_statistic <- function(x) {
-    (x[1,1]*x[2,2])/sum(x)
+    (x[1,1]*x[2,2])/(x[1,1]+x[2,2]+x[2,1]+x[1,2])
   }
   
   soma_r_squared <- Reduce('+', lapply(lista, r_statistic_squared)) # Certo
@@ -61,7 +54,7 @@ maentel_haeszer_test <- function(x, correct = FALSE) {
   # H = (bici(bi+ci))/ni^2
   
   h_statistic <- function(x) {
-    ((x[1, 2]*x[2, 1])*(x[1, 2]+x[2, 1]))/(sum(x)^2)
+    ((x[1, 2]*x[2, 1])*(x[1, 2]+x[2, 1]))/(x[1,1]+x[2,2]+x[2,1]+x[1,2])^2
   }
   #fantoche
   
@@ -83,10 +76,8 @@ maentel_haeszer_test <- function(x, correct = FALSE) {
   # Todas estão certas..
   
   
-  var_odds.ratio <- (soma_f/(2*soma_r_squared)) + (soma_g/(2*soma_r*soma_s)) + (soma_h/(2*soma_s_squared))
+  var_odds.ratio <- soma_f/(2*soma_r_squared) + soma_g/(2*soma_r*soma_s) + soma_h/(2*soma_s_squared)
   print(var_odds.ratio)
-  
-  
   var_ln.odds.ratio <- var_odds.ratio/(odds_ratio_estimator^2)
   
   ic_superior <- exp(log(odds_ratio_estimator) + 1.96*sqrt(var_ln.odds.ratio))
@@ -130,11 +121,11 @@ maentel_haeszer_test <- function(x, correct = FALSE) {
   
   p_value <- pchisq(mantel_haenszer_statistic, 1, lower.tail = FALSE)
   
-  paste0('data: ', x)
+  
   paste0('Mantel-Haenszel X-squared = ', mantel_haenszer_statistic, 'df = 1, p-value: ', p_value)
-  paste0('Alternative hypothesis: true common odds ratio is not equal to 1')
+  print('Alternative hypothesis: true common odds ratio is not equal to 1')
   print('95 percent confidence interval: ')
-  paste(ic_inferior, ic_superior, sep = " ")
+  print(ic_inferior, ic_superior)
   paste0('Common odds ratio: ', odds_ratio_estimator)
   
   if (p_value  < 0.05) {

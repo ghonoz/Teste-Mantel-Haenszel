@@ -27,7 +27,8 @@ maentel_haeszer_test <- function(x, correct = FALSE) {
     (x[1,1]*x[2,2])*((x[1,1]+x[2,2])/(x[1,1]+x[2,1]+x[1,2]+x[2,2])^2)
   }
   
-  soma_f <- Reduce('+', lapply(lista, f_statistic)) # Certo#
+  soma_f <- Reduce('+', lapply(lista, f_statistic)) # Certo
+
   
   # R = (ai*di)/ni
   
@@ -50,7 +51,7 @@ maentel_haeszer_test <- function(x, correct = FALSE) {
   }
   
   soma_g <- Reduce('+', lapply(lista, g_statistic)) # Certo
-  
+
   # H = (bici(bi+ci))/ni^2
   
   h_statistic <- function(x) {
@@ -77,7 +78,6 @@ maentel_haeszer_test <- function(x, correct = FALSE) {
   
   
   var_odds.ratio <- soma_f/(2*soma_r_squared) + soma_g/(2*soma_r*soma_s) + soma_h/(2*soma_s_squared)
-  print(var_odds.ratio)
   var_ln.odds.ratio <- var_odds.ratio/(odds_ratio_estimator^2)
   
   ic_superior <- exp(log(odds_ratio_estimator) + 1.96*sqrt(var_ln.odds.ratio))
